@@ -10,7 +10,7 @@ namespace MeadowTicTacToe
 
         public int gamestate = 1;
 
-        public int turn = 1;
+        public int turn = 0;
 
         public int position = 0;
 
@@ -54,7 +54,6 @@ namespace MeadowTicTacToe
         private void Menu()
         {
             position = 0;
-            turn = 0;
 
             draw.MenuSetup();
 
@@ -65,7 +64,6 @@ namespace MeadowTicTacToe
             }
             while (gamestate == 1);
 
-            turn = (turn + 1) % 2;
         }
 
         //Start TicTacToe - Gamestate 2
@@ -81,8 +79,6 @@ namespace MeadowTicTacToe
             turns = 0;
             winType = 8;
             position = 4;
-
-            turn = (turn + 1) % 2;
 
             do
             {

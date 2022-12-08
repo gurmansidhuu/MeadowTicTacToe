@@ -203,31 +203,6 @@ namespace MeadowTicTacToe
                         return;
                     }
 
-                    //GameOver Inputs
-                    if (game.gamestate == 3)
-                    {
-                        if (game.position <= 0)
-                        {
-                            game.gamestate = 2;
-
-                            if (game.turn == 1)
-                            {
-                                joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
-                                joystick2.StopUpdating();
-                            }
-                            else
-                            {
-                                joystick2.StartUpdating(TimeSpan.FromMilliseconds(20));
-                                joystick1.StopUpdating();
-                            }
-
-                        }
-                        else
-                        {
-                            game.gamestate = 1;
-                        }
-
-                    }
 
                     //In Game Inputs
                     if (game.gamestate == 2)
@@ -254,6 +229,37 @@ namespace MeadowTicTacToe
                 {
                     Console.WriteLine(a.Message);
                 }
+
+                return;
+            }
+
+            //GameOver Inputs
+            if (game.gamestate == 3)
+            {
+                if (game.position <= 0)
+                {
+                    game.gamestate = 2;
+
+                    if (game.turn == 0)
+                    {
+                        joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
+                        joystick2.StopUpdating();
+                    }
+                    else
+                    {
+                        joystick2.StartUpdating(TimeSpan.FromMilliseconds(20));
+                        joystick1.StopUpdating();
+                    }
+
+                }
+                else
+                {
+                    game.gamestate = 1;
+
+                    joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
+                    joystick2.StopUpdating();
+                }
+
             }
         }
 
