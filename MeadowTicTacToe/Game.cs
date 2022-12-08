@@ -1,18 +1,6 @@
-﻿using Meadow;
-using Meadow.Devices;
-using Meadow.Foundation;
-using Meadow.Foundation.Displays;
+﻿using Meadow.Foundation;
 using Meadow.Foundation.Graphics;
-using Meadow.Foundation.Leds;
-using Meadow.Foundation.Sensors.Buttons;
-using Meadow.Foundation.Sensors.Hid;
-using Meadow.Gateways.Bluetooth;
-using Meadow.Hardware;
-using Meadow.Peripherals.Sensors.Hid;
-using Meadow.Units;
-using System;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MeadowTicTacToe
 {
@@ -40,6 +28,7 @@ namespace MeadowTicTacToe
             
         }
 
+        //Controlls the game with int gamestate
         public void StartGame()
         { 
             while (true)
@@ -61,21 +50,25 @@ namespace MeadowTicTacToe
             
         }
 
+        //Main Menu - Gamestate 1
         private void Menu()
         {
             position = 0;
+            turn = 0;
 
             draw.MenuSetup();
 
+            //Wait for player 1 to start game
             do
             {
                 AwaitInput();
-
             }
             while (gamestate == 1);
 
+            turn = (turn + 1) % 2;
         }
 
+        //Start TicTacToe - Gamestate 2
         public void NewGame()
         {
             draw.GameSetup("P2");
@@ -86,40 +79,39 @@ namespace MeadowTicTacToe
             }
 
             turns = 0;
-
             winType = 8;
-
             position = 4;
 
             turn = (turn + 1) % 2;
 
             do
             {
+                //if all possible squares are filled declare draw
                 if(turns > 8)
                 {
                     winType = 8;
                     gamestate++;
                 }
 
+                //Alternate between P1 & P2 turns
                 if (turn == 0)
                 {
                     Player1Turn();
                 }
-
                 else
                 {
                     Player2Turn();
                 }
             }
             while (gamestate == 2);
-
         }
 
+        //Game Over overlayed ontop of game - Gamestate 3
         private void GameOver()
         {
+            //Display winner or draw
             if(winType == 8)
             {
-                //Draw
                 draw.DisplayWinner(winType, "Draw", Color.Gray);
             }
             else if(turn == 1)
@@ -131,15 +123,21 @@ namespace MeadowTicTacToe
                 draw.DisplayWinner(winType, "P2", Color.Blue);
             }
 
+            //Player 1 chooses to rematch or return to main menu
             do
             {
+                //Move cursor between the options and check for inputs
                 if(position <= 0)
                 {
+                    position = 0;
+
                     draw.DrawCursor(77, 137, 90, 24, Color.Red);
                     draw.DrawCursor(77, 167, 90, 24, Color.Gray);
                 }
                 else
                 {
+                    position = 1;
+
                     draw.DrawCursor(77, 167, 90, 24, Color.Red);
                     draw.DrawCursor(77, 137, 90, 24, Color.Gray);
                 }
@@ -148,33 +146,37 @@ namespace MeadowTicTacToe
                 AwaitInput();
             }
             while (gamestate == 3);
-
         }
 
+        //Player 1 Turn - Drawing cursor
         private void Player1Turn()
         {
             AwaitInput();
+
             for (int i = 0; i < 9; i++)
             {
                 draw.GameplayCursor(i, Color.Black);
             }
             draw.GameplayCursor(position, Color.Red);
+
             draw.Show();
         }
 
+        //Player 2 Turn - Drawing cursor
         private void Player2Turn()
         {
             AwaitInput();
+
             for(int i = 0; i < 9; i++)
             {
                 draw.GameplayCursor(i, Color.Black);
             }
             draw.GameplayCursor(position, Color.Blue);
+
             draw.Show();
         }
 
-        
-
+        //Inputs done with interrupt and bool values for singular vertical and horizontal movement
         public void AwaitInput()
         {
             vertIN = false;
@@ -184,7 +186,7 @@ namespace MeadowTicTacToe
         }
 
         
-
+        //Checks if move so valid and not overiding a X/O
         public bool CheckMove()
         {
             //if unvalid return
@@ -204,19 +206,21 @@ namespace MeadowTicTacToe
                 draw.DrawMoveO(position);
             }
 
+            //Check if game is won or swap move
             if (CheckWin(turn))
             {
                 gamestate++;
             }
             else
             {
-                
+                turns++;
                 position = 4;
             }
             
             return true;
         }
 
+        //Check all possible scenarios of winning
         private bool CheckWin(int Turn)
         {
             int winCon = (Turn + 1) * 3;
@@ -262,16 +266,32 @@ namespace MeadowTicTacToe
             }
 
             //Diagonal Check - Top left to bottom right
-            checksum = Moves[0] + Moves[4] + Moves[8];
+            for(int i = 0; i < 3; i++)
+            {
+                if (Moves[4 * i] == (Turn + 1))
+                {
+                    checksum += Moves[4 * i];
+                }
+            }
 
             if (checksum == winCon)
             {
                 winType = 6;
                 return true;
             }
+            else
+            {
+                checksum = 0;
+            }
 
             //Diagonal Check - Top right to bottom left
-            checksum = Moves[2] + Moves[4] + Moves[6];
+            for (int i = 2; i < 7; i+= 2)
+            {
+                if (Moves[i] == (Turn + 1))
+                {
+                    checksum += Moves[i];
+                }
+            }
 
             if (checksum == winCon)
             {

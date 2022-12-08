@@ -1,14 +1,5 @@
-﻿using Meadow;
-using Meadow.Devices;
-using Meadow.Foundation;
-using Meadow.Foundation.Displays;
+﻿using Meadow.Foundation;
 using Meadow.Foundation.Graphics;
-using Meadow.Foundation.Leds;
-using Meadow.Hardware;
-using Meadow.Units;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MeadowTicTacToe
 {
@@ -21,6 +12,7 @@ namespace MeadowTicTacToe
             this.graphics = graphics;
         }
 
+        //Draw Menu Screen
         public void MenuSetup()
         {
 
@@ -52,25 +44,20 @@ namespace MeadowTicTacToe
             graphics.Show();
         }
 
+        //Draw Cursors of various sizes
         public void DrawCursor(int x, int y, int width, int height, Color color)
         {
             //Cursor
-            graphics.DrawRectangle
-                (
-                    x: x,
-                    y: y,
-                    width: width,
-                    height: height,
-                    color: color
-                );
+            graphics.DrawRectangle(x, y, width, height, color);
         }
 
+        //Used to show the screen in certian cases
         public void Show()
         {
             graphics.Show();
         }
 
-
+        //Setup TicTacToe board
         public void GameSetup(string opp)
         {
             graphics.Clear();
@@ -93,6 +80,7 @@ namespace MeadowTicTacToe
             graphics.Show();
         }
 
+        //Draw X depending on position
         public void DrawMoveX(int Position)
         {
 
@@ -147,6 +135,7 @@ namespace MeadowTicTacToe
             graphics.Show();
         }
 
+        //Draw O depending on position
         public void DrawMoveO(int Position)
         {
 
@@ -192,6 +181,7 @@ namespace MeadowTicTacToe
             graphics.Show();
         }
 
+        //Display winner and how it was won
         public void DisplayWinner(int winType, string winner, Color color)
         {
             graphics.CurrentFont = new Font12x20();
@@ -238,6 +228,8 @@ namespace MeadowTicTacToe
             graphics.Show();
 
         }
+
+        //Displaying how the game was won and in the color of the player
         private void WinType(int winType, Color color)
         {
             //Draw how the game was won
@@ -281,6 +273,7 @@ namespace MeadowTicTacToe
             }
         }
 
+        //Cursors used when navigating with joysticks
         public void GameplayCursor(int Position, Color color)
         {
 
