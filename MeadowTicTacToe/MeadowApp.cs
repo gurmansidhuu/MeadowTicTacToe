@@ -75,8 +75,10 @@ namespace MeadowTicTacToe
             button1 = new PushButton(Device, Device.Pins.D04);
             button1.Clicked += ButtonClicked1;
 
+
             button2 = new PushButton(Device, Device.Pins.D03);
             button2.Clicked += ButtonClicked2;
+            
 
             //Setup Analog Sticks
             joystick1 = new AnalogJoystick(
@@ -180,59 +182,6 @@ namespace MeadowTicTacToe
         //Button 1 Function - Includes all cases from all gamestates
         void ButtonClicked1(object sender, EventArgs e)
         {
-            if (game.turn == 0)
-            {
-                try
-                {
-                    //Menu accept the input and changes which joystick to get input from
-                    if (game.gamestate == 1)
-                    {
-                        game.gamestate++;
-
-                        if (game.turn == 0)
-                        {
-                            joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
-                            joystick2.StopUpdating();
-                        }
-                        else
-                        {
-                            joystick2.StartUpdating(TimeSpan.FromMilliseconds(20));
-                            joystick1.StopUpdating();
-                        }
-
-                        return;
-                    }
-
-
-                    //In Game Inputs
-                    if (game.gamestate == 2)
-                    {
-                        //Check if valid input and change active joystick
-                        if (game.CheckMove())
-                        {
-                            game.turn = 1;
-
-                            joystick2.StartUpdating(TimeSpan.FromMilliseconds(20));
-                            joystick1.StopUpdating();
-                        }
-                    }
-
-                    //If gamestate changes to gameover joystick 1 activates
-                    if (game.gamestate == 3)
-                    {
-                        joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
-                        joystick2.StopUpdating();
-                    }
-                }
-
-                catch (Exception a)
-                {
-                    Console.WriteLine(a.Message);
-                }
-
-                return;
-            }
-
             //GameOver Inputs
             if (game.gamestate == 3)
             {
@@ -259,41 +208,74 @@ namespace MeadowTicTacToe
                     joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
                     joystick2.StopUpdating();
                 }
+            }
 
+            else if (game.turn == 0)
+            {
+                //Menu accept the input and changes which joystick to get input from
+                if (game.gamestate == 1)
+                {
+                    game.gamestate++;
+
+                    if (game.turn == 0)
+                    {
+                        joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
+                        joystick2.StopUpdating();
+                    }
+                    else
+                    {
+                        joystick2.StartUpdating(TimeSpan.FromMilliseconds(20));
+                        joystick1.StopUpdating();
+                    }
+                }
+
+
+                //In Game Inputs
+                else if (game.gamestate == 2)
+                {
+                    //Check if valid input and change active joystick
+                    if (game.CheckMove())
+                    {
+                        game.turn = 1;
+
+                        joystick2.StartUpdating(TimeSpan.FromMilliseconds(20));
+                        joystick1.StopUpdating();
+                    }
+                }
+
+                //If gamestate changes to gameover joystick 1 activates
+                if (game.gamestate == 3)
+                {
+                    joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
+                    joystick2.StopUpdating();
+                }
             }
         }
+        
 
         //Button 2 Function - Only used in game
         void ButtonClicked2(object sender, EventArgs e)
         {
             if (game.turn == 1)
             {
-                try
+                //In Game Inputs
+                if (game.gamestate == 2)
                 {
-                    //In Game Inputs
-                    if (game.gamestate == 2)
+                    //Check if valid input and change active joystick
+                    if (game.CheckMove())
                     {
-                        //Check if valid input and change active joystick
-                        if (game.CheckMove())
-                        {
-                            game.turn = 0;
+                        game.turn = 0;
 
-                            joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
-                            joystick2.StopUpdating();
-                        }
-                    }
-
-                    //If gamestate changes to gameover joystick 1 activates
-                    if (game.gamestate == 3)
-                    {
                         joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
                         joystick2.StopUpdating();
                     }
                 }
 
-                catch (Exception a)
+                //If gamestate changes to gameover joystick 1 activates
+                if (game.gamestate == 3)
                 {
-                    Console.WriteLine(a.Message);
+                    joystick1.StartUpdating(TimeSpan.FromMilliseconds(20));
+                    joystick2.StopUpdating();
                 }
             }
         }
