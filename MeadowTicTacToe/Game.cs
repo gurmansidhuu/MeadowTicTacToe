@@ -90,11 +90,11 @@ namespace MeadowTicTacToe
                 }
 
                 //Alternate between P1 & P2 turns
-                if (turn == 0)
+                while (turn == 0)
                 {
                     Player1Turn();
                 }
-                else
+                while(turn == 1)
                 {
                     Player2Turn();
                 }
